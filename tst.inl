@@ -39,7 +39,7 @@ void cTST<T>::collect(nodePtr p, const std::string& prefix,
     
     if ( p->mValue != mNullValue )
     {
-        if ( format == "" || d == format.size()-1 )
+        if ( format == "" || ( d == format.size()-1 && equals(p->mChar, format[d])) )
             mKeys.push_back(prefix + p->mChar);
     }
     
