@@ -43,7 +43,19 @@ void cTST<T>::collect(nodePtr p, const std::string& prefix,
             mKeys.push_back(prefix + p->mChar);
     }
     
-    if ( p->pLeft != nullptr ) collect(p->pLeft, prefix, format, d);
+    if ( p->pLeft != nullptr ) 
+    {
+        if ( format != "" )
+        {
+            // If format string present, only need to go left if what we have is a wildcard,
+            // or the format char is smaller than current.
+            if ( format[d] == '.' || format[d] < p->mChar )
+                collect(p->pLeft, prefix, format, d);
+        } else
+        {
+            collect(p->pLeft, prefix, format, d);
+        }
+        
     if ( p->pMid != nullptr )
     {
         if ( format == "" || equals(p->mChar, format[d]) )
@@ -51,7 +63,19 @@ void cTST<T>::collect(nodePtr p, const std::string& prefix,
             collect(p->pMid, prefix + p->mChar, format, d+1);
         }
     }
-    if ( p->pRight != nullptr ) collect(p->pRight, prefix, format, d);
+   
+    if ( p->pRight != nullptr ) 
+    {
+        if ( format != "" )
+        {
+            if ( format[d] == '.' || format[d] > p->mChar )
+                collect(p->pRight, prefix, format, d);
+        }
+        else
+        {
+            collect(p->pRight, prefix, format, d);
+        }
+    }
 }
 
 template <class T>
